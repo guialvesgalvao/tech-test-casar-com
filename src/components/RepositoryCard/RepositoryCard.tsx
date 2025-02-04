@@ -4,13 +4,13 @@ import { HeartIcon } from "@/assets/icons/Heart";
 interface RepositoryCardProps {
   title: string;
   description: string;
-  mainTechnology: string;
+  language: string;
   isFavorite: boolean;
   lastUpdate: string;
 }
 
 export function RepositoryCard(props: Readonly<RepositoryCardProps>) {
-  const { title, description, mainTechnology, isFavorite, lastUpdate } = props;
+  const { title, description, language, isFavorite, lastUpdate } = props;
 
   return (
     <div className="border rounded-lg shadow-md p-4 bg-white">
@@ -24,7 +24,7 @@ export function RepositoryCard(props: Readonly<RepositoryCardProps>) {
       </div>
 
       <div className="mt-4 flex flex-col gap-x-8 gap-y-2 text-sm text-gray-500 sm:flex-row">
-        <MainTechnology name={mainTechnology} />
+        <MainTechnology name={language} />
         <span>{lastUpdate}</span>
       </div>
     </div>
