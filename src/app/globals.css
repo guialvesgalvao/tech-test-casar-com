@@ -1,21 +1,34 @@
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary: #32C0C6;
+  --primary-ligth: #D4EDEE;
+  --primary-dark: #329599;
+  --placeholder: #8C8C8C;
+  --grey-neutral: #616161;
+  --grey-dark: #4E4E4E;
+  --white-bg-ligth: #FFFFFF;
+  --white-bg-matte: #F3F3F5;
+  --custom-border: #E9ECEF;
+  --success: #5CB85C;
+  --warning: #FFB22B;
+  --danger: #FC4B6C;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #0a0a0a;
+    --background: #ededed;
   }
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
