@@ -21,7 +21,7 @@ const AsyncSelect2 = dynamic(() => import('react-select/async'), {
   loading: () => <div>Carregando...</div>
 });
 
-export default function Home() {
+export default function SearchInput() {
   const [defaultUsers, setDefaultUsers] = useState<any[]>([{
     login: "mojombo",
     id: 1,
