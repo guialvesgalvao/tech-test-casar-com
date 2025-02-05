@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: 'standalone', 
+  env: {
+    GITHUB_TOKEN: process.env.GITHUB_TOKEN,
+  },
   images: {
     remotePatterns: [
       {
