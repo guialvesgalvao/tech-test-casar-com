@@ -1,3 +1,5 @@
+"use client"
+
 import { HeartIcon } from "@/assets/icons/Heart";
 import { SectionButton } from "../SectionButton/SectionButton";
 import { UserIcon } from "@/assets/icons/User";
