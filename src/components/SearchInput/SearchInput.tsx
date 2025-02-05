@@ -1,110 +1,112 @@
-"use client"
-import { JSX, useState } from 'react';
-import { SearchIcon }  from '../../assets/icons/Search';
-import debounce from 'lodash/debounce';
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
+"use client";
 
-type User = {
-  id: number;
-  login: string;
-  avatar_url: string;
-};
-
-type OptionType = {
-  value: number;
-  label: JSX.Element;
-};
-
-const AsyncSelect2 = dynamic(() => import('react-select/async'), {
-  ssr: false,
-  loading: () => <div>Carregando...</div>
-});
+import { useState, useEffect, useRef, KeyboardEvent } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { SearchIcon } from "@/assets/icons/Search";
+import { IUser } from "@/interfaces/IUsers";
+import { UserService } from "@/services/userService";
 
 export default function SearchInput() {
-  const [defaultUsers, setDefaultUsers] = useState<any[]>([{
-    login: "mojombo",
-    id: 1,
-    node_id: "MDQ6VXNlcjE=",
-    avatar_url: "https://avatars.githubusercontent.com/u/1?v=4",
-    gravatar_id: "",
-    url: "https://api.github.com/users/mojombo",
-    html_url: "https://github.com/mojombo",
-    followers_url: "https://api.github.com/users/mojombo/followers",
-    following_url: "https://api.github.com/users/mojombo/following{/other_user}",
-    gists_url: "https://api.github.com/users/mojombo/gists{/gist_id}",
-    starred_url: "https://api.github.com/users/mojombo/starred{/owner}{/repo}",
-    subscriptions_url: "https://api.github.com/users/mojombo/subscriptions",
-    organizations_url: "https://api.github.com/users/mojombo/orgs",
-    repos_url: "https://api.github.com/users/mojombo/repos",
-    events_url: "https://api.github.com/users/mojombo/events{/privacy}",
-    received_events_url: "https://api.github.com/users/mojombo/received_events",
-    type: "User",
-    user_view_type: "public",
-    site_admin: false
-  }]);
+  const [inputValue, setInputValue] = useState("");
+  const [suggestions, setSuggestions] = useState<IUser[]>([]);
+  const repository = new UserService();
+  const router = useRouter();
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const loadOptionsDebounced = debounce(
-    async (inputValue: string) => {
-      if (!inputValue) return defaultUsers;
-      
-      const response = await fetch(`https://api.github.com/search/users?q=${inputValue}`);
-      const data = await response.json();
-      const users = data.items as User[];
-      
-      return users.map((user) => ({
-        value: user.id,
-        label: (
-          <div className="flex items-center gap-2">
-            <Image 
-              src={user.avatar_url} 
-              alt={user.login}
-              width={24}
-              height={24}
-              className="w-6 h-6 rounded-full"
-            />
-            <span>{user.login}</span>
-          </div>
-        )
-      }));
-    }, 
-    500
-  );
+  let debounceTimer: ReturnType<typeof setTimeout>;
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setSuggestions([]);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const fetchUsers = async (query: string) => {
+    try {
+      const data = await repository.getUsersByText(query, 5, 1);
+      setSuggestions(data.users ?? []);
+    } catch (error) {
+      console.error("Erro ao buscar usuários:", error);
+      setSuggestions([]);
+    }
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setInputValue(value);
+    clearTimeout(debounceTimer);
+
+    if (!value) {
+      setSuggestions([]);
+      return;
+    }
+
+    debounceTimer = setTimeout(() => {
+      fetchUsers(value);
+    }, 2000);
+  };
+
+  const handleSearch = () => {
+    if (inputValue.trim()) {
+      router.push(`/user/${inputValue.trim()}`);
+      setSuggestions([]); 
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      router.push(`/user/${inputValue}`);
+    }
+  };
+
+  const handleSelectSuggestion = (login: string) => {
+    router.push(`/user/${login}`);
+    setSuggestions([]);
+  };
 
   return (
-    <AsyncSelect2
-      defaultOptions={defaultUsers}
-      loadOptions={loadOptionsDebounced}
-      components={{
-        DropdownIndicator: ({ innerProps }) => (
-          <div {...innerProps} className="pr-3 cursor-pointer">
-            <SearchIcon />
-            {/* <SearchIcon className="w-5 h-5 text-gray-400" /> */}
-          </div>
-        )
-      }}
-      styles={{
-        control: (base) => ({ 
-          ...base, 
-          padding: "8px",
-          minHeight: '48px'
-        }),
-        menuList: (base) => ({ 
-          ...base, 
-          maxHeight: "240px",
-          overflowY: 'auto' 
-        }),
-        dropdownIndicator: (base) => ({
-          ...base,
-          display: 'none'
-        })
-      }}
-      classNamePrefix="react-select"
-      instanceId="user-search"
-      placeholder="Buscar usuários..."
-      noOptionsMessage={() => "Nenhum usuário encontrado"}
-      loadingMessage={() => "Carregando..."}
-      cacheOptions
-    />
+    <div ref={containerRef} className="relative w-full max-w-md my-2">
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Buscar usuários..."
+          value={inputValue}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          className="w-full pr-9 pl-4 py-2 border rounded focus:outline-none focus:ring-1 focus:ring-primary"
+        />
+        <button
+        onClick={() => {
+          console.log('clicado', inputValue)
+          handleSearch()
+        }}
+        className="absolute cursor-pointer inset-y-0 right-0 flex items-center pr-3 text-gray-400">
+          <SearchIcon />
+        </button>
+      </div>
+
+      {suggestions.length > 0 && (
+        <ul className="absolute left-0 right-0 bg-white border rounded mt-1 z-10 shadow-lg">
+          {suggestions.map((user) => (
+            <button
+              key={user.id}
+              className="p-2 w-full flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
+              onClick={() => handleSelectSuggestion(user.userName)}
+            >
+              <Image src={user.avatarUrl} alt={user.userName} width={24} height={24} className="rounded-full" />
+              <span>{user.userName}</span>
+            </button>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
