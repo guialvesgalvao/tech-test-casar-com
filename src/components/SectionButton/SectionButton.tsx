@@ -7,16 +7,14 @@ interface SectionButtonProps {
   isSelected?: boolean;
   onClick?: () => void;
   href?: string;
+  customClasses?: string;
 }
 
 export function SectionButton(props: Readonly<SectionButtonProps>) {
-  const { icon, title, isSelected = true, onClick, href } = props;
+  const { icon, title, isSelected = true, onClick, href, customClasses } = props;
 
   const pureButton = (
     <button
-      className={`${
-        isSelected ? "bg-primary cursor-auto" : "bg-white cursor-pointer"
-      } flex items-center gap-2 py-3 px-4 cursor-pointer h-full`}
       onClick={onClick}
     >
       {icon}
@@ -29,7 +27,9 @@ export function SectionButton(props: Readonly<SectionButtonProps>) {
   if (!href || href.trim() === '') return pureButton;
 
   return (
-    <Link href={href}>
+    <Link className={`${
+        isSelected ? "bg-primary cursor-auto" : "bg-white cursor-pointer"
+      } flex items-center gap-2 py-3 px-4 cursor-pointer h-full ${customClasses}`} href={href}>
       {pureButton}
     </Link>
   );

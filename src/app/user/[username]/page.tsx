@@ -68,7 +68,7 @@ export default function UserPage() {
 
   return (
     <div className="flex flex-col md:flex-row w-full mt-8 px-4">
-      <div className="w-full md:w-1/3">
+      <div className="w-full md:w-1/3 mb-5">
         <UserProfile name={user.name} avatarUrl={user.avatarUrl} bio={user.bio} userName={user.userName} />
       </div>
 
