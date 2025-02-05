@@ -11,7 +11,7 @@ export function UserProfile(props: Readonly<UserProfileProps>) {
   const { name, userName, bio, avatarUrl } = props;
 
   return (
-    <div className='flex p-2 items-center flex-col border'>
+    <div className='flex p-2 items-center flex-col border w-full rounded-lg'>
       <div >
         <Image
         className='rounded-full'
