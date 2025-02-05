@@ -1,34 +1,14 @@
-"use client"
-
-import { SectionButton } from "@/components/SectionButton/SectionButton";
-import { UserProfile } from "@/components/UserProfile/UserProfile";
-import { UserIcon } from "@/assets/icons/User";
-import { HeartFilledIcon } from "@/assets/icons/HeartFilled"; 
-import { Header } from "@/components/Header/Header";
-import { Footer } from "@/components/Footer/Footer";
-
+import { SearchFeedback } from "@/components/SearchFeedback/SearchFeedback";
+import SearchUser from '../../public/search-user.png'
 export default function Home() {
-  const x = false;
-  const isSelected = false; 
-
   return (
-    <div className="bg-red-600 w-full">
-
-      <Header />
-      <Footer />
-      {/* <SectionButton
-      icon={<HeartFilledIcon width={20} heigth={20} color={"#32C0C6"}  /> }
-      isSelected={false}
-      onClick={() => console.log('clicked')} 
-      title={'Favoritos'}
+    <div className="h-full flex items-center justify-center">
+      <SearchFeedback
+        title="Procure pelo Nome ou Nome de Usuário"
+        subTitle="Encontre os repositórios de algum usuário digitando no campo acima"
+        url={SearchUser}
+        alt="User not found"
       />
-
-      <UserProfile
-      name="Mojombo"
-      bio="Olá eu sou o mojombo e vou te guiar hoje para seu aprendizado"
-      userName="mojombo"
-      avatarUrl={'https://avatars.githubusercontent.com/u/1?v=4'}
-      /> */}
     </div>
   );
 }
