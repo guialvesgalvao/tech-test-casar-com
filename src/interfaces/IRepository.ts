@@ -11,6 +11,7 @@ export interface IRepository {
   language: string;
   watchers: number;
   defaultBranch: string;
+  nextPage?: number;
 }
 
 export interface IRepositoryResponse {
