@@ -27,20 +27,4 @@ export class UserService {
       users,
     };
   }
-
-  getLastSearchedUsers(): string[] {
-    const users = JSON.parse(localStorage.getItem("lastUsers") ?? "[]");
-
-    return users ?? [];
-  }
-
-  createLastSearchedUsers(lastSearchedUsers: string[]) {
-    localStorage.setItem("lastUsers", JSON.stringify(lastSearchedUsers));
-  }
-
-  updateLastSearchedUsers(searchedUsers: string[]) {
-    localStorage.removeItem("lastUsers");
-
-    this.createLastSearchedUsers(searchedUsers);
-  }
 }

@@ -7,7 +7,7 @@ export interface IRepository {
   fork: boolean;
   url: string;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: string;
   language: string;
   watchers: number;
   defaultBranch: string;
