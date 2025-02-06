@@ -4,7 +4,7 @@ import "./globals.css";
 import { QueryProvider } from "@/components/QueryProvider/QueryProvider";
 import { Header } from "@/components/Header/Header";
 import { Footer } from "@/components/Footer/Footer";
-import { headers } from "next/headers";
+import { getIsMobile } from "@/hooks/useIsMobileSSR";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,16 +26,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const hdr = await headers();
-  const userAgent = hdr.get("user-agent") ?? "";
-  const isMobile = /Android|iPhone|Mobile/i.test(userAgent || "");
+
+  const isMobile = await getIsMobile();
 
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-full w-full`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex flex-col`}>
         <QueryProvider>
           {!isMobile && <Header />}
-            {children}
+          <main className={`flex-1 overflow-auto ${isMobile && "mt-6"}`}>{children}</main>
           {isMobile && <Footer />}
         </QueryProvider>
       </body>

@@ -12,7 +12,8 @@ import { RepoService } from "@/services/repoService";
 import { useState } from "react";
 import { IRepository } from "@/interfaces/IRepository";
 import { LIMIT_REPO_PER_PAGE } from "@/consts/defaultConfigConsts";
-
+import SearchInput from "@/components/SearchInput/SearchInput";
+import { useIsMobile } from "@/hooks/useIsMobileCSR";
 
 export default function UserPage() {
   const { username } = useParams();
@@ -20,6 +21,7 @@ export default function UserPage() {
   const [hasMore, setHasMore] = useState(true);
   const [repositories, setRepositories] = useState<IRepository[]>([]);
   const [page, setPage] = useState(1);
+  const isMobile = useIsMobile();
 
   const { data: user, isLoading } = useQuery({
     queryKey: ["user", username],
@@ -54,12 +56,13 @@ export default function UserPage() {
 
   if (!username || user === null) {
     return (
-      <div>
+      <div className="px-5 flex h-full items-center flex-col gap-7 text-center">
+        {isMobile && <SearchInput />}
         <SearchFeedback
           searchText={username as string}
           title="Nenhum usuário encontrado"
           subTitle="Verifique se a escrita está correta ou tente novamente"
-          url={NotFound}
+          url={!isMobile ? NotFound : undefined}
           alt="User not found"
         />
       </div>
@@ -67,20 +70,26 @@ export default function UserPage() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row w-full mt-8 px-4">
-      <div className="w-full md:w-1/3 mb-5">
-        <UserProfile name={user.name} avatarUrl={user.avatarUrl} bio={user.bio} userName={user.userName} />
+    <div className="flex flex-col md:flex-row w-full mt-8 mb-12 px-4">
+      {isMobile && (
+        <div className="w-full flex justify-center mb-3 px-3">
+          <SearchInput />
+        </div>
+      )}
+
+      <div className="w-full md:w-1/3 mb-5 px-3">
+        <UserProfile name={user.name} avatarUrl={user.avatarUrl} bio={user.bio ?? ''} userName={user.userName} />
       </div>
 
       <div className="w-full md:w-2/3">
-        <RepositoryList 
-        title="Repositórios" 
-        align="initial" 
-        getMoreRepositories={getMoreRepositories}
-        repositories={repositories}
-        hasMore={hasMore}
-        page={page}
-        setPage={setPage}
+        <RepositoryList
+          title="Repositórios"
+          align="initial"
+          getMoreRepositories={getMoreRepositories}
+          repositories={repositories}
+          hasMore={hasMore}
+          page={page}
+          setPage={setPage}
         />
       </div>
     </div>
