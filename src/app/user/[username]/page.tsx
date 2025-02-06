@@ -13,7 +13,7 @@ import { useState } from "react";
 import { IRepository } from "@/interfaces/IRepository";
 import { LIMIT_REPO_PER_PAGE } from "@/consts/defaultConfigConsts";
 import SearchInput from "@/components/SearchInput/SearchInput";
-import { useIsMobile } from "@/hooks/useIsMobileCSR";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function UserPage() {
   const { username } = useParams();
@@ -49,7 +49,7 @@ export default function UserPage() {
   if (user === undefined || isLoading) {
     return (
       <div className="flex items-center justify-center w-full h-96 ">
-        <OrbitProgress variant="track-disc" color={"#32C0C6"} speedPlus={2} size="small" />;
+        <OrbitProgress variant="track-disc" color={"#32C0C6"} speedPlus={2} size="small" />
       </div>
     );
   }

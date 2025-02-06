@@ -1,20 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/components/QueryProvider/QueryProvider";
 import { Header } from "@/components/Header/Header";
 import { Footer } from "@/components/Footer/Footer";
-import { getIsMobile } from "@/hooks/useIsMobileSSR";
 import { Toaster } from "react-hot-toast";
 
-const geistSans = Geist({
+const PoppinsSans = Poppins({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: [ "300", "400", "500", "600"]
 });
 
 export const metadata: Metadata = {
@@ -27,15 +22,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isMobile = await getIsMobile();
 
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex flex-col`}>
+      <body className={`${PoppinsSans.variable} antialiased h-screen flex flex-col`}>
         <QueryProvider>
-          {!isMobile && <Header />}
-          <main className={`flex-1 overflow-auto ${isMobile && "mt-6"}`}>{children}</main>
-          {isMobile && <Footer />}
+           <Header />
+          <main className="flex-1 overflow-auto mt-6">{children}</main>
+           <Footer />
           <Toaster position="bottom-right" reverseOrder={true} />
         </QueryProvider>
       </body>

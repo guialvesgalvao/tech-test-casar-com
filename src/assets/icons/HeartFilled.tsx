@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { IconProps } from "./types";
 
 export function HeartFilledIcon({ width, heigth, color }: Readonly<IconProps>) {
@@ -17,3 +18,5 @@ export function HeartFilledIcon({ width, heigth, color }: Readonly<IconProps>) {
     </svg>
   );
 }
+
+export default memo(HeartFilledIcon); 

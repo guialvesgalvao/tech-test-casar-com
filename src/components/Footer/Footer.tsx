@@ -11,7 +11,7 @@ export function Footer() {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full h-16 bg-white border-t border-gray-200 z-50">
+    <div className="fixed md:hidden bottom-0 left-0 right-0 w-full h-16 bg-white border-t border-gray-200 z-50">
       <div className="h-full flex flex-row">
         <SectionButton
           customClasses="w-full flex items-center justify-center h-full"

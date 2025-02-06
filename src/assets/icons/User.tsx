@@ -1,6 +1,7 @@
+import { memo } from "react";
 import { IconProps } from "./types";
 
-export function UserIcon({ width = 16, heigth = 16, color}: Readonly<IconProps>) {
+export function UserIcon({ width = 16, heigth = 16, color }: Readonly<IconProps>) {
   return (
     <svg width={width} height={heigth} viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0_1304_119)">
@@ -17,3 +18,5 @@ export function UserIcon({ width = 16, heigth = 16, color}: Readonly<IconProps>)
     </svg>
   );
 }
+
+export default memo(UserIcon);

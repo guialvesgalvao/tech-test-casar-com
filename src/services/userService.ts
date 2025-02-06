@@ -29,8 +29,9 @@ export class UserService {
         users,
       };
       
-    } catch (_error) {
+    } catch (e) {
       toast.error('Ocorreu um erro ao tentar encontrar usuários com o texto informado')
+      console.error(e)
       return {
         hasNext: false,
         users: []

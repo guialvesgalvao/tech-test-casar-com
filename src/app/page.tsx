@@ -1,10 +1,13 @@
+"use client"
+
 import { SearchFeedback } from "@/components/SearchFeedback/SearchFeedback";
 import SearchUser from "../../public/search-user.png";
 import SearchInput from "@/components/SearchInput/SearchInput";
-import { getIsMobile } from "@/hooks/useIsMobileSSR";
-export default async function Home() {
+import { useIsMobile } from "@/hooks/useIsMobile";
 
-  const isMobile = await getIsMobile();
+export default function Home() {
+
+  const isMobile = useIsMobile();
 
   return (
     <div className="h-full flex flex-col gap-0 md:gap-10 px-9 md:px-5 text-start md:text-center items-center justify-start md:justify-center">

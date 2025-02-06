@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 export function StarIcon() {
   return (
     <svg width="26" height="24" viewBox="0 0 26 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -15,3 +17,5 @@ export function StarIcon() {
     </svg>
   );
 }
+
+export default memo(StarIcon)
