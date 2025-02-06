@@ -4,12 +4,12 @@ import { useState, useEffect, useRef, KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { SearchIcon } from "@/assets/icons/Search";
-import { IUser } from "@/interfaces/IUsers";
+import { IUserResult } from "@/interfaces/IUsers";
 import { UserService } from "@/services/userService";
 
 export default function SearchInput() {
   const [inputValue, setInputValue] = useState("");
-  const [suggestions, setSuggestions] = useState<IUser[]>([]);
+  const [suggestions, setSuggestions] = useState<IUserResult[]>([]);
   const repository = new UserService();
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -73,7 +73,7 @@ export default function SearchInput() {
   };
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-md my-2">
+    <div ref={containerRef} className="relative w-full max-w-full md:max-w-md my-2">
       <div className="relative">
         <input
           type="text"
@@ -84,10 +84,7 @@ export default function SearchInput() {
           className="w-full pr-9 pl-4 py-2 border rounded focus:outline-none focus:ring-1 focus:ring-primary"
         />
         <button
-        onClick={() => {
-          console.log('clicado', inputValue)
-          handleSearch()
-        }}
+        onClick={handleSearch}
         className="absolute cursor-pointer inset-y-0 right-0 flex items-center pr-3 text-gray-400">
           <SearchIcon />
         </button>

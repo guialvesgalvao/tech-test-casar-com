@@ -11,10 +11,11 @@ interface SectionButtonProps {
 }
 
 export function SectionButton(props: Readonly<SectionButtonProps>) {
-  const { icon, title, isSelected = true, onClick, href, customClasses } = props;
+  const { icon, title, isSelected = true, onClick, href, customClasses = '' } = props;
 
   const pureButton = (
     <button
+    className="flex flex-row gap-x-2 items-center py-5 px-4"
       onClick={onClick}
     >
       {icon}
@@ -29,7 +30,7 @@ export function SectionButton(props: Readonly<SectionButtonProps>) {
   return (
     <Link className={`${
         isSelected ? "bg-primary cursor-auto" : "bg-white cursor-pointer"
-      } flex items-center gap-2 py-3 px-4 cursor-pointer h-full ${customClasses}`} href={href}>
+      }  cursor-pointer h-full ${customClasses}`} href={href}>
       {pureButton}
     </Link>
   );

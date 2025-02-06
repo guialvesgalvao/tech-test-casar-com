@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
-import { formatUpdateDateToString } from "@/helpers/formatUpdateDateToString";
 import { RepositoryCard } from "../RepositoryCard/RepositoryCard";
 import { IRepository } from "@/interfaces/IRepository";
 
