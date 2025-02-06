@@ -7,7 +7,6 @@ import { PATHS } from "@/consts/paths";
 import { HeartFilledIcon } from "@/assets/icons/HeartFilled";
 
 export function Footer() {
-
   const pathname = usePathname();
 
   return (
@@ -15,13 +14,23 @@ export function Footer() {
       <div className="h-full flex flex-row">
         <SectionButton
           customClasses="w-full flex items-center justify-center h-full"
-          icon={<UserIcon color={PATHS.FAVORITES !== pathname ? "#fff" : "#32C0C6"} />}
+          icon={
+            <UserIcon
+              color={PATHS.FAVORITES !== pathname ? "#fff" : "#32C0C6"}
+            />
+          }
           isSelected={PATHS.FAVORITES !== pathname}
           href={PATHS.HOME}
         />
         <SectionButton
           customClasses="w-full flex items-center justify-center h-full"
-          icon={<HeartFilledIcon heigth={16} width={16} color={PATHS.FAVORITES === pathname ? "#fff" : "#32C0C6"} />}
+          icon={
+            <HeartFilledIcon
+              heigth={16}
+              width={16}
+              color={PATHS.FAVORITES === pathname ? "#fff" : "#32C0C6"}
+            />
+          }
           isSelected={PATHS.FAVORITES === pathname}
           href={PATHS.FAVORITES}
         />

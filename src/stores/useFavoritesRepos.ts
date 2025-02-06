@@ -27,7 +27,7 @@ export const useFavoritesRepos = create(
       },
     }),
     {
-      name: "favorites-storage"
-    }
-  )
+      name: "favorites-storage",
+    },
+  ),
 );

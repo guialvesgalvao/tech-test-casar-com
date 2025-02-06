@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { SearchFeedback } from "@/components/SearchFeedback/SearchFeedback";
 import SearchUser from "../../public/search-user.png";
@@ -6,7 +6,6 @@ import SearchInput from "@/components/SearchInput/SearchInput";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function Home() {
-
   const isMobile = useIsMobile();
 
   return (
@@ -16,8 +15,8 @@ export default function Home() {
         subTitle="Encontre os repositórios de algum usuário digitando no campo acima"
         url={!isMobile ? SearchUser : undefined}
         alt="Procure por um usuário"
-        />
-        {isMobile && <SearchInput />}
+      />
+      {isMobile && <SearchInput />}
     </div>
   );
 }

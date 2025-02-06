@@ -23,7 +23,11 @@ export default function UserPage() {
   const [page, setPage] = useState(1);
   const isMobile = useIsMobile();
 
-  const { data: user, isLoading, isError } = useQuery({
+  const {
+    data: user,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["user", username],
     queryFn: () => new UserService().getUser(username as string),
   });
@@ -49,7 +53,12 @@ export default function UserPage() {
   if (user === undefined || isLoading) {
     return (
       <div className="flex items-center justify-center w-full h-96 ">
-        <OrbitProgress variant="track-disc" color={"#32C0C6"} speedPlus={2} size="small" />
+        <OrbitProgress
+          variant="track-disc"
+          color={"#32C0C6"}
+          speedPlus={2}
+          size="small"
+        />
       </div>
     );
   }
@@ -78,7 +87,12 @@ export default function UserPage() {
       )}
 
       <div className="w-full md:w-1/3 mb-5 px-3">
-        <UserProfile name={user.name} avatarUrl={user.avatarUrl} bio={user.bio ?? ''} userName={user.userName} />
+        <UserProfile
+          name={user.name}
+          avatarUrl={user.avatarUrl}
+          bio={user.bio ?? ""}
+          userName={user.userName}
+        />
       </div>
 
       <div className="w-full md:w-2/3">

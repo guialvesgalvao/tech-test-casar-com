@@ -31,5 +31,5 @@ export const GITHUB_TECH_COLORS: Record<string, string> = {
   matlab: "#e16737",
   powershell: "#012456",
   lua: "#000080",
-  default: "#cccccc"
+  default: "#cccccc",
 };

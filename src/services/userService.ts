@@ -14,27 +14,36 @@ export class UserService {
 
       return user;
     } catch (error) {
-      if(axios.isAxiosError(error) && error.status !== 404 ) toast.error('Ocorreu um erro durante a busca do usuário');
+      if (axios.isAxiosError(error) && error.status !== 404)
+        toast.error("Ocorreu um erro durante a busca do usuário");
       return null;
     }
   }
 
   async getUsersByText(username: string, quantity: number, page: number) {
     try {
-      const result = await this.repository.getUsersByText(username, quantity, page);
-      const users: IUserResult[] = result.length > 0 ? result.map((user: IUserResponse) => userFactory(user)) : [];
-      
+      const result = await this.repository.getUsersByText(
+        username,
+        quantity,
+        page,
+      );
+      const users: IUserResult[] =
+        result.length > 0
+          ? result.map((user: IUserResponse) => userFactory(user))
+          : [];
+
       return {
         hasNext: users.length < quantity,
         users,
       };
-      
     } catch (e) {
-      toast.error('Ocorreu um erro ao tentar encontrar usuários com o texto informado')
-      console.error(e)
+      toast.error(
+        "Ocorreu um erro ao tentar encontrar usuários com o texto informado",
+      );
+      console.error(e);
       return {
         hasNext: false,
-        users: []
+        users: [],
       };
     }
   }

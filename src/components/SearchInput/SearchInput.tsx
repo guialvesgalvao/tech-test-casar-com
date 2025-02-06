@@ -25,7 +25,7 @@ export default function SearchInput() {
     queryKey: ["users", inputValue],
     queryFn: () => fetchUsers(inputValue),
     enabled: false,
-    staleTime: 1000 * 60 * 5
+    staleTime: 1000 * 60 * 5,
   });
 
   const debouncedRefetch = debounce(() => {
@@ -58,7 +58,10 @@ export default function SearchInput() {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
@@ -70,7 +73,10 @@ export default function SearchInput() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-full md:max-w-md my-2">
+    <div
+      ref={containerRef}
+      className="relative w-full max-w-full md:max-w-md my-2"
+    >
       <div className="relative">
         <input
           type="text"
@@ -96,7 +102,13 @@ export default function SearchInput() {
               className="p-2 w-full flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
               onClick={() => handleSelectSuggestion(user.userName)}
             >
-              <Image src={user.avatarUrl} alt={user.userName} width={24} height={24} className="rounded-full" />
+              <Image
+                src={user.avatarUrl}
+                alt={user.userName}
+                width={24}
+                height={24}
+                className="rounded-full"
+              />
               <span>{user.userName}</span>
             </button>
           ))}

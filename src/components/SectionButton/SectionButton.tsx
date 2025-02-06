@@ -11,26 +11,40 @@ interface SectionButtonProps {
 }
 
 export function SectionButton(props: Readonly<SectionButtonProps>) {
-  const { icon, title, isSelected = true, onClick, href, customClasses = '' } = props;
+  const {
+    icon,
+    title,
+    isSelected = true,
+    onClick,
+    href,
+    customClasses = "",
+  } = props;
 
   const pureButton = (
     <button
-    className="flex flex-row gap-x-2 items-center py-5 px-4"
+      className="flex flex-row gap-x-2 items-center py-5 px-4"
       onClick={onClick}
     >
       {icon}
       {title ? (
-        <span className={`${isSelected ? "text-white" : "text-primary"} text-sm font-medium`}>{title}</span>
+        <span
+          className={`${isSelected ? "text-white" : "text-primary"} text-sm font-medium`}
+        >
+          {title}
+        </span>
       ) : null}
     </button>
   );
 
-  if (!href || href.trim() === '') return pureButton;
+  if (!href || href.trim() === "") return pureButton;
 
   return (
-    <Link className={`${
+    <Link
+      className={`${
         isSelected ? "bg-primary cursor-auto" : "bg-white cursor-pointer"
-      }  cursor-pointer h-full ${customClasses}`} href={href}>
+      }  cursor-pointer h-full ${customClasses}`}
+      href={href}
+    >
       {pureButton}
     </Link>
   );

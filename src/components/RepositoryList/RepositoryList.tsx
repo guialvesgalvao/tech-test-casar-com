@@ -15,7 +15,15 @@ interface RepositoryListProps {
 }
 
 export function RepositoryList(props: Readonly<RepositoryListProps>) {
-  const { repositories, title, align, getMoreRepositories, hasMore, page, setPage } = props;
+  const {
+    repositories,
+    title,
+    align,
+    getMoreRepositories,
+    hasMore,
+    page,
+    setPage,
+  } = props;
   const observer = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
@@ -34,7 +42,7 @@ export function RepositoryList(props: Readonly<RepositoryListProps>) {
 
       if (node) observer.current.observe(node);
     },
-    [hasMore]
+    [hasMore],
   );
 
   return (

@@ -9,7 +9,7 @@ import { Toaster } from "react-hot-toast";
 const PoppinsSans = Poppins({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-  weight: [ "300", "400", "500", "600"]
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -22,14 +22,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
-      <body className={`${PoppinsSans.variable} antialiased h-screen flex flex-col`}>
+      <body
+        className={`${PoppinsSans.variable} antialiased h-screen flex flex-col`}
+      >
         <QueryProvider>
-           <Header />
+          <Header />
           <main className="flex-1 overflow-auto mt-6">{children}</main>
-           <Footer />
+          <Footer />
           <Toaster position="bottom-right" reverseOrder={true} />
         </QueryProvider>
       </body>

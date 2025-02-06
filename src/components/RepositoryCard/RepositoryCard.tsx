@@ -13,7 +13,9 @@ export function RepositoryCard(props: Readonly<IRepository>) {
   const isFavorite = !!favorites.find((fav) => fav.id === id);
 
   function handleFavorite() {
-    favorites.find((fav) => fav.id === id) ? removeFavorite(props.id) : addFavorite(props);
+    favorites.find((fav) => fav.id === id)
+      ? removeFavorite(props.id)
+      : addFavorite(props);
   }
 
   return (
@@ -21,14 +23,21 @@ export function RepositoryCard(props: Readonly<IRepository>) {
       <div className="flex justify-between items-start">
         <div>
           <h4 className="text-lg font-semibold text-grey-neutral">{title}</h4>
-          <p className="font-normal text-placeholder text-base md:text-sm">{description}</p>
+          <p className="font-normal text-placeholder text-base md:text-sm">
+            {description}
+          </p>
         </div>
 
-        <FavoriteButton isFavorite={isFavorite} handleFavorite={handleFavorite} />
+        <FavoriteButton
+          isFavorite={isFavorite}
+          handleFavorite={handleFavorite}
+        />
       </div>
 
       <div className="mt-4 flex flex-col gap-x-8 gap-y-2 text-sm text-gray-500 sm:flex-row">
-        {language && language.trim() !== "" && <MainTechnology name={language} />}
+        {language && language.trim() !== "" && (
+          <MainTechnology name={language} />
+        )}
         <span>{updatedAt}</span>
       </div>
     </div>
@@ -40,12 +49,17 @@ interface FavoriteButtonProps {
   handleFavorite: () => void;
 }
 
-function FavoriteButton({ isFavorite, handleFavorite }: Readonly<FavoriteButtonProps>) {
+function FavoriteButton({
+  isFavorite,
+  handleFavorite,
+}: Readonly<FavoriteButtonProps>) {
   return (
     <button
       onClick={handleFavorite}
       className={`${
-        isFavorite ? "border-primary-dark border rounded-full" : "bg-white-bg-matte"
+        isFavorite
+          ? "border-primary-dark border rounded-full"
+          : "bg-white-bg-matte"
       } rounded-full p-2 cursor-pointer`}
     >
       {isFavorite ? (
