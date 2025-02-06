@@ -1,17 +1,19 @@
 import { IRepository } from "./IRepository";
 
-export interface IUser {
-  id: number;
-  userName: string;
-  avatarUrl: string;
+export interface IUser extends IUserResult {
   repos?: IRepository[];
-  bio?: string | null;
+  bio: string;
   email?: string | null;
-  name?: string;
+  name: string;
   company?: string;
   blog?: string;
   followers?: number;
   following?: number;
+}
+export interface IUserResult {
+  id: number;
+  userName: string;
+  avatarUrl: string;
 }
 
 export interface IUserResponse {

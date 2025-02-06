@@ -9,7 +9,7 @@ export class RepositoriesRepo {
         const endpoint = `https://api.github.com/users/${username}/repos?per_page=${this._quantityPerPage}&page=${page}`
         const { data } = await axios.get(endpoint,{
             headers: {
-              Authorization: 'Bearer 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'
+              Authorization: `Bearer ${process.env.GITHUB_TOKEN}`
             }
            })
 

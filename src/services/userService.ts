@@ -1,5 +1,5 @@
 import { userFactory } from "../factories/userFactory";
-import { IUser, IUserResponse } from "../interfaces/IUsers";
+import { IUser, IUserResponse, IUserResult } from "../interfaces/IUsers";
 import { UsersRepo } from "../repositories/usersRepo";
 
 export class UserService {
@@ -20,7 +20,7 @@ export class UserService {
   async getUsersByText(username: string, quantity: number, page: number) {
     const result = await this.repository.getUsersByText(username, quantity, page);
 
-    const users = result.length > 0 ? result.map((user: IUserResponse) => userFactory(user)) : [];
+    const users: IUserResult[] = result.length > 0 ? result.map((user: IUserResponse) => userFactory(user)) : [];
 
     return {
       hasNext: users.length < quantity,
