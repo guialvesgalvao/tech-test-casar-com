@@ -9,7 +9,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Poppins', 'sans-serif'], // Definindo Poppins como fonte padrão
+        sans: ['Poppins', 'sans-serif'],
       },
       colors: {
         primary: "var(--primary)",
