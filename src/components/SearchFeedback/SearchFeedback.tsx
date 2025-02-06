@@ -1,10 +1,10 @@
 import Image, { StaticImageData } from "next/image";
 
 interface SearchFeedbackProps {
-  searchText: string;
+  searchText?: string;
   title: string;
   subTitle: string;
-  url: StaticImageData;
+  url?: StaticImageData;
   alt: string;
 }
 
@@ -13,10 +13,16 @@ export function SearchFeedback(props: Readonly<SearchFeedbackProps>) {
 
   return (
     <div className="flex items-center flex-col gap-1">
-      {searchText ? <p className="text-primary font-semibold text-[21px]">"{searchText}"</p> : null}
-      <h5 className="text-grey-neutral font-semibold text-[21px]">{title}</h5>
+      {searchText && (
+        <p className="text-primary font-semibold text-[21px]">
+          &quot;{searchText}&quot;
+        </p>
+      )}
+      <h5 className="text-grey-neutral font-semibold text-xl md:text-lg">
+        {title}
+      </h5>
       <p className="text-grey-neutral mb-8">{subTitle}</p>
-      <Image src={url} alt={alt} />
+      {url && <Image src={url} alt={alt} />}
     </div>
   );
 }

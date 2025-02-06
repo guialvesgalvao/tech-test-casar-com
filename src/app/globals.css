@@ -29,6 +29,6 @@
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: var(--white-bg-ligth);
   font-family: 'Poppins', sans-serif;
 }

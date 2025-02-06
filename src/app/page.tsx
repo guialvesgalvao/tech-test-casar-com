@@ -1,29 +1,22 @@
-"use client"
+"use client";
 
-import { SectionButton } from "@/components/SectionButton/SectionButton";
-import { UserProfile } from "@/components/UserProfile/UserProfile";
-import { UserIcon } from "@/assets/icons/User";
-import { HeartFilledIcon } from "@/assets/icons/HeartFilled"; 
+import { SearchFeedback } from "@/components/SearchFeedback/SearchFeedback";
+import SearchUser from "../../public/search-user.png";
+import SearchInput from "@/components/SearchInput/SearchInput";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function Home() {
-  const x = false;
-  const isSelected = false; 
+  const isMobile = useIsMobile();
 
   return (
-    <div className="bg-red-600">
-      <SectionButton
-      icon={<HeartFilledIcon width={20} heigth={20} color={"#32C0C6"}  /> }
-      isSelected={false}
-      onClick={() => console.log('clicked')} 
-      title={'Favoritos'}
+    <div className="h-full flex flex-col gap-0 md:gap-10 px-9 md:px-5 text-start md:text-center items-center justify-start md:justify-center">
+      <SearchFeedback
+        title="Procure pelo Nome ou Nome de Usuário"
+        subTitle="Encontre os repositórios de algum usuário digitando no campo acima"
+        url={!isMobile ? SearchUser : undefined}
+        alt="Procure por um usuário"
       />
-
-      <UserProfile
-      name="Mojombo"
-      description="Olá eu sou o mojombo e vou te guiar hoje para seu aprendizado"
-      username="mojombo"
-      avatarUrl={'https://avatars.githubusercontent.com/u/1?v=4'}
-      />
+      {isMobile && <SearchInput />}
     </div>
   );
 }

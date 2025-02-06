@@ -3,21 +3,22 @@ export interface IRepository {
   title: string;
   private: boolean;
   isFavorite: boolean;
-  description: any;
+  description: string;
   fork: boolean;
   url: string;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: string;
   language: string;
   watchers: number;
   defaultBranch: string;
+  nextPage?: number;
 }
 
 export interface IRepositoryResponse {
   id: number;
   name: string;
   private: boolean;
-  description: any;
+  description: string;
   fork: boolean;
   url: string;
   created_at: string;
