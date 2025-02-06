@@ -5,6 +5,7 @@ import { QueryProvider } from "@/components/QueryProvider/QueryProvider";
 import { Header } from "@/components/Header/Header";
 import { Footer } from "@/components/Footer/Footer";
 import { getIsMobile } from "@/hooks/useIsMobileSSR";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +27,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   const isMobile = await getIsMobile();
 
   return (
@@ -36,6 +36,7 @@ export default async function RootLayout({
           {!isMobile && <Header />}
           <main className={`flex-1 overflow-auto ${isMobile && "mt-6"}`}>{children}</main>
           {isMobile && <Footer />}
+          <Toaster position="bottom-right" reverseOrder={true} />
         </QueryProvider>
       </body>
     </html>

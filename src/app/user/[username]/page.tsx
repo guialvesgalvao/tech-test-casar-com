@@ -23,7 +23,7 @@ export default function UserPage() {
   const [page, setPage] = useState(1);
   const isMobile = useIsMobile();
 
-  const { data: user, isLoading } = useQuery({
+  const { data: user, isLoading, isError } = useQuery({
     queryKey: ["user", username],
     queryFn: () => new UserService().getUser(username as string),
   });
@@ -54,7 +54,7 @@ export default function UserPage() {
     );
   }
 
-  if (!username || user === null) {
+  if (!username || user === null || isError) {
     return (
       <div className="px-5 flex h-full items-center flex-col gap-7 text-center">
         {isMobile && <SearchInput />}
@@ -63,7 +63,7 @@ export default function UserPage() {
           title="Nenhum usuário encontrado"
           subTitle="Verifique se a escrita está correta ou tente novamente"
           url={!isMobile ? NotFound : undefined}
-          alt="User not found"
+          alt="Usuário não encontrado"
         />
       </div>
     );
