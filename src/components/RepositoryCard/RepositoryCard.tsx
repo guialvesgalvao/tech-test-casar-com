@@ -12,12 +12,8 @@ export function RepositoryCard(props: Readonly<IRepository>) {
 
   const isFavorite = !!favorites.find((fav) => fav.id === id);
 
-  function handleFavorite(){
-    if(favorites.find((fav) => fav.id === id)){
-      removeFavorite(props.id)
-    }else {
-      addFavorite(props)
-    }
+  function handleFavorite() {
+    favorites.find((fav) => fav.id === id) ? removeFavorite(props.id) : addFavorite(props);
   }
 
   return (

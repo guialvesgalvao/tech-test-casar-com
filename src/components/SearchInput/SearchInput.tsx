@@ -1,25 +1,65 @@
 "use client";
 
-import { useState, useEffect, useRef, KeyboardEvent } from "react";
+import { useState, useRef, KeyboardEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useQuery } from "@tanstack/react-query";
 import { SearchIcon } from "@/assets/icons/Search";
-import { IUserResult } from "@/interfaces/IUsers";
 import { UserService } from "@/services/userService";
+import { debounce } from "lodash";
 
 export default function SearchInput() {
   const [inputValue, setInputValue] = useState("");
-  const [suggestions, setSuggestions] = useState<IUserResult[]>([]);
-  const repository = new UserService();
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
+  const repository = new UserService();
 
-  let debounceTimer: ReturnType<typeof setTimeout>;
+  const fetchUsers = async (query: string) => {
+    if (!query) return [];
+    const data = await repository.getUsersByText(query, 5, 1);
+    return data.users ?? [];
+  };
+
+  const { data: suggestions = [], refetch } = useQuery({
+    queryKey: ["users", inputValue],
+    queryFn: () => fetchUsers(inputValue),
+    enabled: false,
+    staleTime: 1000 * 60 * 5
+  });
+
+  const debouncedRefetch = debounce(() => {
+    refetch();
+    setIsOpen(true);
+  }, 500);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+    debouncedRefetch();
+  };
+
+  const handleSearch = () => {
+    if (inputValue.trim()) {
+      router.push(`/user/${inputValue.trim()}`);
+      setIsOpen(false);
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  const handleSelectSuggestion = (login: string) => {
+    router.push(`/user/${login}`);
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setSuggestions([]);
+        setIsOpen(false);
       }
     }
 
@@ -28,49 +68,6 @@ export default function SearchInput() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  const fetchUsers = async (query: string) => {
-    try {
-      const data = await repository.getUsersByText(query, 5, 1);
-      setSuggestions(data.users ?? []);
-    } catch (error) {
-      console.error("Erro ao buscar usuários:", error);
-      setSuggestions([]);
-    }
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setInputValue(value);
-    clearTimeout(debounceTimer);
-
-    if (!value) {
-      setSuggestions([]);
-      return;
-    }
-
-    debounceTimer = setTimeout(() => {
-      fetchUsers(value);
-    }, 2000);
-  };
-
-  const handleSearch = () => {
-    if (inputValue.trim()) {
-      router.push(`/user/${inputValue.trim()}`);
-      setSuggestions([]); 
-    }
-  };
-
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      router.push(`/user/${inputValue}`);
-    }
-  };
-
-  const handleSelectSuggestion = (login: string) => {
-    router.push(`/user/${login}`);
-    setSuggestions([]);
-  };
 
   return (
     <div ref={containerRef} className="relative w-full max-w-full md:max-w-md my-2">
@@ -84,13 +81,14 @@ export default function SearchInput() {
           className="w-full pr-9 pl-4 py-2 border rounded focus:outline-none focus:ring-1 focus:ring-primary"
         />
         <button
-        onClick={handleSearch}
-        className="absolute cursor-pointer inset-y-0 right-0 flex items-center pr-3 text-gray-400">
+          onClick={handleSearch}
+          className="absolute cursor-pointer inset-y-0 right-0 flex items-center pr-3 text-gray-400"
+        >
           <SearchIcon />
         </button>
       </div>
 
-      {suggestions.length > 0 && (
+      {isOpen && suggestions.length > 0 && (
         <ul className="absolute left-0 right-0 bg-white border rounded mt-1 z-10 shadow-lg">
           {suggestions.map((user) => (
             <button
