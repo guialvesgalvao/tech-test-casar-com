@@ -5,47 +5,26 @@ interface SectionButtonProps {
   icon: JSX.Element;
   title?: string;
   isSelected?: boolean;
-  onClick?: () => void;
-  href?: string;
+  href: string;
   customClasses?: string;
 }
 
 export function SectionButton(props: Readonly<SectionButtonProps>) {
-  const {
-    icon,
-    title,
-    isSelected = true,
-    onClick,
-    href,
-    customClasses = "",
-  } = props;
-
-  const pureButton = (
-    <button
-      className="flex flex-row gap-x-2 items-center py-5 px-4"
-      onClick={onClick}
-    >
-      {icon}
-      {title ? (
-        <span
-          className={`${isSelected ? "text-white" : "text-primary"} text-sm font-medium`}
-        >
-          {title}
-        </span>
-      ) : null}
-    </button>
-  );
-
-  if (!href || href.trim() === "") return pureButton;
+  const { icon, title, isSelected = true, href, customClasses = "" } = props;
 
   return (
     <Link
       className={`${
         isSelected ? "bg-primary cursor-auto" : "bg-white cursor-pointer"
-      }  cursor-pointer h-full ${customClasses}`}
+      }  cursor-pointer h-full ${customClasses} flex flex-row gap-x-2 items-center py-5 px-4`}
       href={href}
     >
-      {pureButton}
+      {icon}
+      {title ? (
+        <span className={`${isSelected ? "text-white" : "text-primary"} text-sm font-medium`}>
+          {title}
+        </span>
+      ) : null}
     </Link>
   );
 }

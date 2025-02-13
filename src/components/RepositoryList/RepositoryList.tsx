@@ -27,22 +27,32 @@ export function RepositoryList(props: Readonly<RepositoryListProps>) {
   const observer = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    getMoreRepositories();
+    if (setPage) {
+      getMoreRepositories();
+    }
   }, [page]);
+
+  useEffect(() => {
+    return () => {
+      observer.current?.disconnect();
+    };
+  }, []);
 
   const lastRepositoryRef = useCallback(
     (node: HTMLDivElement) => {
+      if (!setPage) return;
+
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore && !!setPage) {
+        if (entries[0].isIntersecting && hasMore) {
           setPage((prevPage) => prevPage + 1);
         }
       });
 
       if (node) observer.current.observe(node);
     },
-    [hasMore],
+    [hasMore, setPage]
   );
 
   return (
@@ -56,15 +66,15 @@ export function RepositoryList(props: Readonly<RepositoryListProps>) {
       </h3>
       <div>
         {repositories.map((repo, index) => {
-          if (index === repositories.length - 1) {
+          const isLast = index === repositories.length - 1;
+          if (isLast && setPage) {
             return (
               <div key={repo.id} ref={lastRepositoryRef}>
                 <RepositoryCard {...repo} />
               </div>
             );
-          } else {
-            return <RepositoryCard key={repo.id} {...repo} />;
           }
+          return <RepositoryCard key={repo.id} {...repo} />;
         })}
       </div>
     </div>
