@@ -4,6 +4,7 @@ export interface IRepository {
   private: boolean;
   isFavorite: boolean;
   description: string;
+  owner: string;
   fork: boolean;
   url: string;
   createdAt: Date;
@@ -26,4 +27,28 @@ export interface IRepositoryResponse {
   language: string;
   watchers: number;
   default_branch: string;
+  owner: { login: string }
+}
+
+export interface IAttach {
+  id: string;
+  name: string;
+  path: string;
+  url: string;
+  type: IAttachType;
+  content?: string;
+}
+
+export interface IAttachResult {
+  sha: string;
+  name: string;
+  path: string;
+  url: string;
+  type: IAttachType;
+  content?: string;
+}
+
+export enum IAttachType {
+  File = "file", 
+  Folder = "dir"  
 }

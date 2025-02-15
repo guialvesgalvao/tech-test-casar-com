@@ -1,9 +1,9 @@
 import { formatUpdateDateToString } from "@/helpers/formatUpdateDateToString";
-import { IRepository, IRepositoryResponse } from "../interfaces/IRepository";
+import { IAttach, IAttachResult, IRepository, IRepositoryResponse } from "../interfaces/IRepository";
 
 export function repositoryFactory(
   repo: IRepositoryResponse,
-  nextPage?: number,
+  nextPage?: number
 ): IRepository {
   const item: IRepository = {
     id: repo.id,
@@ -15,11 +15,24 @@ export function repositoryFactory(
     language: repo.language,
     fork: repo.fork,
     isFavorite: false,
+    owner: repo.owner.login,
     watchers: repo.watchers,
     createdAt: new Date(repo.created_at),
-    updatedAt: formatUpdateDateToString(new Date(repo.updated_at)),
-    nextPage: nextPage,
+    updatedAt: formatUpdateDateToString(new Date(repo.updated_at))
   };
 
   return item;
+}
+
+export function repositoryContentFactory(repoContent: IAttachResult, fileContent?: string): IAttach {
+  const item: IAttach = {
+    id: repoContent.sha,
+    path: repoContent.path,
+    name: repoContent.name,
+    type: repoContent.type,
+    url: repoContent.url,
+    content: fileContent ?? repoContent.content
+  }
+
+  return item
 }

@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { IRepositoryResponse } from "../interfaces/IRepository";
+import { IAttachResult, IRepositoryResponse } from "../interfaces/IRepository";
 import { LIMIT_REPO_PER_PAGE } from "@/consts/defaultConfigConsts";
 
 export class RepositoriesRepo {
@@ -29,5 +29,19 @@ export class RepositoriesRepo {
     const { data } = await this.api.get(endpoint);
 
     return data;
+  }
+
+  async getFileCode(userName: string, repoName: string, path: string) {
+    const endpoint = `repos/${userName}/${repoName}/contents/${path}`;
+    const { data } = await this.api.get(endpoint)
+
+    return data
+  }
+
+  async getFolderContent(userName: string, repoName: string, path?: string): Promise<IAttachResult[] | null> {
+    const endpoint = `repos/${userName}/${repoName}/contents/${path ?? ''}`;
+    const { data } = await this.api.get(endpoint);
+    
+    return data
   }
 }
