@@ -20,7 +20,7 @@ export function RepositoryCard(props: Readonly<IRepository>) {
   }
 
   return (
-    <Link href={`/user/${owner}/${title}`}>
+    <Link href={`/user/${owner.userName}/${title}`}>
       <motion.div
         whileHover={{
           scale: 1.02,

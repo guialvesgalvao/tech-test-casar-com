@@ -20,6 +20,18 @@
   --danger: #FC4B6C;
 }
 
+@layer utilities {
+  
+  .no-scrollbar::-webkit-scrollbar {
+      display: none;
+  }
+
+  .no-scrollbar {
+      -ms-overflow-style: none; 
+      scrollbar-width: none; 
+}
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground: #0a0a0a;

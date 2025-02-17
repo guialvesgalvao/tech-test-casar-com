@@ -1,10 +1,11 @@
+import { IUserResponse, IUserResult } from "./IUsers";
+
 export interface IRepository {
   id: number;
   title: string;
   private: boolean;
   isFavorite: boolean;
   description: string;
-  owner: string;
   fork: boolean;
   url: string;
   createdAt: Date;
@@ -13,6 +14,7 @@ export interface IRepository {
   watchers: number;
   defaultBranch: string;
   nextPage?: number;
+  owner: IUserResult;
 }
 
 export interface IRepositoryResponse {
@@ -27,7 +29,7 @@ export interface IRepositoryResponse {
   language: string;
   watchers: number;
   default_branch: string;
-  owner: { login: string }
+  owner: IUserResponse
 }
 
 export interface IAttach {
@@ -37,6 +39,7 @@ export interface IAttach {
   url: string;
   type: IAttachType;
   content?: string;
+  owner?: IUserResult;
 }
 
 export interface IAttachResult {
@@ -45,6 +48,7 @@ export interface IAttachResult {
   path: string;
   url: string;
   type: IAttachType;
+  owner?: IUserResponse;
   content?: string;
 }
 

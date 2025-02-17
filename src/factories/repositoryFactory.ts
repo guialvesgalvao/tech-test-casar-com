@@ -1,10 +1,7 @@
 import { formatUpdateDateToString } from "@/helpers/formatUpdateDateToString";
 import { IAttach, IAttachResult, IRepository, IRepositoryResponse } from "../interfaces/IRepository";
 
-export function repositoryFactory(
-  repo: IRepositoryResponse,
-  nextPage?: number
-): IRepository {
+export function repositoryFactory(repo: IRepositoryResponse): IRepository {
   const item: IRepository = {
     id: repo.id,
     title: repo.name,
@@ -15,10 +12,14 @@ export function repositoryFactory(
     language: repo.language,
     fork: repo.fork,
     isFavorite: false,
-    owner: repo.owner.login,
+    owner: {
+      id: repo.owner.id,
+      userName: repo.owner.login,
+      avatarUrl: repo.owner.avatar_url,
+    },
     watchers: repo.watchers,
     createdAt: new Date(repo.created_at),
-    updatedAt: formatUpdateDateToString(new Date(repo.updated_at))
+    updatedAt: formatUpdateDateToString(new Date(repo.updated_at)),
   };
 
   return item;
@@ -31,8 +32,13 @@ export function repositoryContentFactory(repoContent: IAttachResult, fileContent
     name: repoContent.name,
     type: repoContent.type,
     url: repoContent.url,
-    content: fileContent ?? repoContent.content
-  }
+    owner: {
+      id: repoContent.owner?.id ?? 0,
+      userName: repoContent.owner?.login ?? '',
+      avatarUrl: repoContent.owner?.avatar_url ?? ''
+    },
+    content: fileContent ?? repoContent.content,
+  };
 
-  return item
+  return item;
 }

@@ -1,10 +1,9 @@
 import { FileExplorer } from "@/components/FileExplorer/FileExplorer";
-import { IAttach, IAttachType } from "@/interfaces/IRepository";
+import { RepositoryNavigator } from "@/components/RepositoryNavigator/RepositoryNavigator";
+import { IAttachType } from "@/interfaces/IRepository";
 import { RepoService } from "@/services/repoService";
-import { div } from "motion/react-client";
+import { UserService } from "@/services/userService";
 import { notFound } from "next/navigation";
-import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
-import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 interface PageProps {
   params: Promise<{
@@ -18,12 +17,14 @@ export default async function RepoContent({ params }: Readonly<PageProps>) {
   const resolvedParams = await params;
   const { username, reponame, repopaths } = resolvedParams;
   const service = new RepoService();
+  const userRepository = new UserService();
 
   if (!username || !reponame || !repopaths) notFound();
 
   const fileType = service.getFileType(Array.isArray(repopaths) ? repopaths : [repopaths]);
   const filePath = service.getStringFilePath(repopaths);
 
+  const getUserData = await userRepository.getUser(username);
   const content =
     fileType === IAttachType.File
       ? await service.getFileContent(username, reponame, filePath)
@@ -32,19 +33,11 @@ export default async function RepoContent({ params }: Readonly<PageProps>) {
   if (!content) return notFound();
 
   return (
-    <div className="w-full h-full flex  justify-center">
-      {fileType === IAttachType.Folder ? (
-        <FileExplorer 
-        attachs={content as IAttach[]} 
-        basePageUrl={`/user/${username}/${reponame}`}
-        filePath={filePath}
-        
-        />
-      ) : (
-        <div className="h-4/5">
-          <SyntaxHighlighter style={docco}>{((content as IAttach)?.content as string) ?? ""}</SyntaxHighlighter>
-        </div>
-      )}
+    <div className="w-full h-full flex flex-col items-center no-scrollbar">
+      <div className="w-4/5 h-full flex flex-col items-start gap-2 no-scrollbar">
+        <RepositoryNavigator avatarUrl={getUserData?.avatarUrl} userName={username} repoName={reponame} />
+        <FileExplorer attachs={content} basePageUrl={`/user/${username}/${reponame}`} filePath={filePath} />
+      </div>
     </div>
   );
 }

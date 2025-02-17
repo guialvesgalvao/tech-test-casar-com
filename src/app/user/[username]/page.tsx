@@ -32,6 +32,7 @@ export default function UserPage() {
     queryKey: ["user", username],
     queryFn: () => new UserService().getUser(username as string),
   });
+  
   const getMoreRepositories = useCallback(async () => {
     try {
       const newRepos = await repository.getUserRepos(username as string, page);
