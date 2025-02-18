@@ -10,7 +10,14 @@ const customJestConfig = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|scss|sass)$': 'identity-obj-proxy',
+    "^react-syntax-highlighter/dist/esm/(.*)$": "react-syntax-highlighter/dist/cjs/$1",
   },
+  transform: {
+    "^.+\\.[tj]sx?$": "babel-jest", // ou "ts-jest", conforme seu setup
+  },
+  transformIgnorePatterns: [
+    "/node_modules/(?!react-syntax-highlighter)"
+  ]
 }
 
 module.exports = createJestConfig(customJestConfig)

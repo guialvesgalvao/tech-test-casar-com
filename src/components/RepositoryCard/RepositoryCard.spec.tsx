@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { RepositoryCard } from "./RepositoryCard";
 import { useFavoritesRepos } from "@/stores/useFavoritesRepos";
+import { IconProps } from "@/assets/icons/types";
 
 jest.mock("@/stores/useFavoritesRepos", () => ({
   __esModule: true,
@@ -10,7 +11,7 @@ jest.mock("@/stores/useFavoritesRepos", () => ({
 
 jest.mock("@/assets/icons/HeartFilled", () => ({
   __esModule: true,
-  HeartFilledIcon: (props: any) => (
+  HeartFilledIcon: (props: IconProps) => (
     <svg data-testid="heart-filled-icon" {...props}>
       <title>HeartFilledIcon</title>
     </svg>
@@ -19,7 +20,7 @@ jest.mock("@/assets/icons/HeartFilled", () => ({
 
 jest.mock("@/assets/icons/Heart", () => ({
   __esModule: true,
-  HeartIcon: (props: any) => (
+  HeartIcon: (props: IconProps) => (
     <svg data-testid="heart-icon" {...props}>
       <title>HeartIcon</title>
     </svg>
@@ -28,6 +29,11 @@ jest.mock("@/assets/icons/Heart", () => ({
 
 describe("<RepositoryCard/>", () => {
   const defaultProps = {
+    owner: {
+      id: 12321,
+      userName: 'guialvesgalvao',
+      avatarUrl: 'https://avatars.githubusercontent.com/u/78868778?v=4'
+    },
     id: 1,
     title: "Test Repository",
     description: "This is a test repository.",
@@ -42,6 +48,7 @@ describe("<RepositoryCard/>", () => {
     defaultBranch: "main",
   };
 
+
   function mockFavorites(favoritesData: { id: number }[] = []) {
     (useFavoritesRepos as unknown as jest.Mock).mockReturnValue({
       favorites: favoritesData,
@@ -52,11 +59,12 @@ describe("<RepositoryCard/>", () => {
 
   it("renderiza corretamente título, descrição, linguagem e data de atualização", () => {
     mockFavorites();
+
     render(<RepositoryCard {...defaultProps} />);
 
     const getTitleElement = screen.getByRole("heading", { level: 4 });
     const getDescriptionElement = screen.getByText(defaultProps.description);
-    const getLanguageElement = screen.getByText(defaultProps.description);
+    const getLanguageElement = screen.getByText(defaultProps.language);
     const getModifiedElement = screen.getByText(defaultProps.updatedAt);
 
     expect(getTitleElement).toHaveTextContent(defaultProps.title);
@@ -69,7 +77,7 @@ describe("<RepositoryCard/>", () => {
     mockFavorites();
     render(<RepositoryCard {...defaultProps} />);
 
-    const getIcon = screen.getByTestId("heart-icon");
+    const getIcon = screen.queryByTestId("heart-icon");
     const getIconFilled = screen.queryByTestId("heart-filled-icon");
 
     expect(getIcon).toBeInTheDocument();
@@ -78,9 +86,9 @@ describe("<RepositoryCard/>", () => {
 
   it("renderiza HeartFilledIcon quando o repositório está nos favoritos", () => {
     mockFavorites([{ id: 1 }]);
-    render(<RepositoryCard {...defaultProps} />);
+    render(<RepositoryCard {...defaultProps} isFavorite={true} />);
 
-    const getIcon = screen.getByTestId("heart-icon");
+    const getIcon = screen.queryByTestId("heart-icon");
     const getIconFilled = screen.queryByTestId("heart-filled-icon");
 
     expect(getIconFilled).toBeInTheDocument();
@@ -98,7 +106,7 @@ describe("<RepositoryCard/>", () => {
   });
 
   it("chama removeFavorite ao clicar no botão de favorito se já estiver favoritado", () => {
-    mockFavorites([{ id: 1 }]);
+    mockFavorites([{ id: 1}]);
     render(<RepositoryCard {...defaultProps} />);
     const { removeFavorite } = useFavoritesRepos();
 

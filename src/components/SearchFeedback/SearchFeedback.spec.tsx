@@ -5,9 +5,9 @@ import NotFound from "../../../public/not-found.png";
 
 describe("<SearchFeedback/>", () => {
   const defaultProps = {
-    searchText: "React",
-    title: "Itens Encontrados",
-    subTitle: "Encontramos 10 itens relacionados à sua pesquisa.",
+    searchText: "casar-com",
+    title: "Nenhum usuário encontrado",
+    subTitle: "Verifique se a escrita está correta ou tente novamente",
     url: NotFound,
     alt: "Imagem de teste",
   };
@@ -18,27 +18,43 @@ describe("<SearchFeedback/>", () => {
 
   it("renderiza o título e o subtítulo", () => {
     renderComponent();
-    expect(screen.getByRole("heading", { level: 5 })).toHaveTextContent(defaultProps.title);
-    expect(screen.getByText(defaultProps.subTitle)).toBeInTheDocument();
+
+    const titleElement = screen.getByRole("heading", { level: 5 });
+    const subTitleElement = screen.getByText(defaultProps.subTitle);
+    
+    expect(titleElement).toHaveTextContent(defaultProps.title);
+    expect(subTitleElement).toBeInTheDocument();
   });
 
   it('renderiza o texto de pesquisa quando "searchText" for fornecido', () => {
     renderComponent();
-    expect(screen.getByText(`"${defaultProps.searchText}"`)).toBeInTheDocument();
+
+    const searchTextElement = screen.getByText(`"${defaultProps.searchText}"`);
+
+    expect(searchTextElement).toBeInTheDocument();
   });
 
   it('não renderiza o texto de pesquisa quando "searchText" estiver vazio', () => {
     renderComponent({ searchText: "" });
-    expect(screen.queryByText(/".*"/)).not.toBeInTheDocument();
+
+    const searchElement = screen.queryByText(/".*"/);
+
+    expect(searchElement).not.toBeInTheDocument();
   });
 
   it("renderiza a imagem com o alt correto", () => {
     renderComponent();
-    expect(screen.getByAltText(defaultProps.alt)).toBeInTheDocument();
+
+    const imageElement = screen.queryByAltText(defaultProps.alt);
+    
+    expect(imageElement).toBeInTheDocument();
   });
 
   it("não renderiza a imagem se a url não for fornecida", () => {
     renderComponent({ url: undefined });
-    expect(screen.queryByAltText(defaultProps.alt)).not.toBeInTheDocument();
+
+    const imageElement = screen.queryByAltText(defaultProps.alt);
+
+    expect(imageElement).not.toBeInTheDocument();
   });
 });

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { JSX } from "react";
 
-interface SectionButtonProps {
+export interface SectionButtonProps {
   icon: JSX.Element;
   title?: string;
   isSelected?: boolean;

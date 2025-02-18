@@ -25,7 +25,7 @@ export function RepositoryNavigator(props: Readonly<NavigatorProps>) {
         <span className="hover:underline">{userName}</span>
       </Link>
       <Link href={`/user/${userName}/${repoName}/`} className="hover:underline">
-        <span>/{repoName}</span>
+        {`/${repoName}`}
       </Link>
     </div>
   );
