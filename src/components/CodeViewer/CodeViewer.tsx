@@ -1,4 +1,5 @@
 import { Light } from "react-syntax-highlighter";
+import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 interface CodeViewerProps {
   code: string;
@@ -11,7 +12,7 @@ export function CodeViewer(props: Readonly<CodeViewerProps>) {
   return (
     <div className="w-full h-full" >
       {hasCode ? (
-        <Light  className="w-full h-full no-scrollbar">
+        <Light style={docco}  className="w-full h-full no-scrollbar">
           {code}
         </Light>
       ) : (

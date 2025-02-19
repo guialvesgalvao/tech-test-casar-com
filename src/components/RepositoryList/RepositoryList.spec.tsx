@@ -1,7 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { RepositoryList } from "./RepositoryList";
-import { formatUpdateDateToString } from "@/helpers/formatUpdateDateToString";
 
 describe("<RepositoryList/>", () => {
   const repositories = [
