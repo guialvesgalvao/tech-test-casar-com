@@ -18,6 +18,11 @@ describe("<RepositoryList/>", () => {
       language: "TypeScript",
       watchers: 42,
       defaultBranch: "main",
+      owner: {
+        id: 2,
+        userName: 'guialvesgalvao',
+        avatarUrl: 'random-avatar'
+      }
     },
     {
       id: 2,
@@ -32,14 +37,17 @@ describe("<RepositoryList/>", () => {
       language: "JavaScript",
       watchers: 15,
       defaultBranch: "develop",
+      owner: {
+        id: 1,
+        userName: 'guialvesgalvao',
+        avatarUrl: 'random-avatar'
+      }
     },
   ];
 
   test("deve renderizar o título principal e os RepositoryCards com datas formatadas", () => {
     render(
-      <RepositoryList title="Meus Repositórios" repositories={repositories} align={"center"} getMoreRepositories={function (): void {
-        throw new Error("Function not implemented.");
-      } } hasMore={false} page={0} />,
+      <RepositoryList title="Meus Repositórios" repositories={repositories} align={"center"} getMoreRepositories={() => {}} hasMore={false} page={0} />,
     );
 
     const h3Element = screen.getByRole("heading", { level: 3 });
@@ -53,8 +61,7 @@ describe("<RepositoryList/>", () => {
         name: repo.title,
       });
 
-      const expectedFormattedDate = formatUpdateDateToString(repo.updatedAt);
-      const lastUpdateDateElement = screen.getByText(expectedFormattedDate);
+      const lastUpdateDateElement = screen.getByText(repo.updatedAt);
 
       expect(repoTitle).toBeInTheDocument();
       expect(lastUpdateDateElement).toBeInTheDocument();
