@@ -48,6 +48,7 @@ export default function SearchInput() {
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       handleSearch();
+      setIsOpen(false)
     }
   };
 

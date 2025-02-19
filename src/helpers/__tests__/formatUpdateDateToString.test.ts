@@ -43,6 +43,7 @@ describe("formatUpdateDateToString", () => {
     const formattedDate = format(pastDate, "d MMM yyyy", { locale: enUS });
     const expected = `Updated on ${formattedDate}`;
     const result = formatUpdateDateToString(pastDate);
+    
     expect(result).toBe(expected);
   });
 });

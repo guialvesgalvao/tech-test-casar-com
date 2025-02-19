@@ -1,48 +1,60 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import { SearchFeedback } from "./SearchFeedback";
-import NotFound from '../../../public/not-found.png'
+import NotFound from "../../../public/not-found.png";
 
 describe("<SearchFeedback/>", () => {
   const defaultProps = {
-    searchText: "React",
-    title: "Itens Encontrados",
-    subTitle: "Encontramos 10 itens relacionados à sua pesquisa.",
+    searchText: "casar-com",
+    title: "Nenhum usuário encontrado",
+    subTitle: "Verifique se a escrita está correta ou tente novamente",
     url: NotFound,
     alt: "Imagem de teste",
   };
 
-  test("Deve renderizar o título e o subtítulo", () => {
-    render(<SearchFeedback {...defaultProps} />);
+  const renderComponent = (props = {}) => {
+    return render(<SearchFeedback {...defaultProps} {...props} />);
+  };
 
-    const h5Element = screen.getByRole("heading", { level: 5 });
-    const subTitle = screen.getByText(defaultProps.subTitle);
+  it("renderiza o título e o subtítulo", () => {
+    renderComponent();
 
-    expect(h5Element).toHaveTextContent(defaultProps.title);
-    expect(subTitle).toBeInTheDocument();
+    const titleElement = screen.getByRole("heading", { level: 5 });
+    const subTitleElement = screen.getByText(defaultProps.subTitle);
+    
+    expect(titleElement).toHaveTextContent(defaultProps.title);
+    expect(subTitleElement).toBeInTheDocument();
   });
 
-  test('Deve renderizar o texto de pesquisa quando "searchText" for fornecido', () => {
-    render(<SearchFeedback {...defaultProps} />);
+  it('renderiza o texto de pesquisa quando "searchText" for fornecido', () => {
+    renderComponent();
 
-    const searchTextElement = screen.getByText(`"${defaultProps.searchText}"`)
+    const searchTextElement = screen.getByText(`"${defaultProps.searchText}"`);
 
     expect(searchTextElement).toBeInTheDocument();
   });
 
-  test('Não deve renderizar o texto de pesquisa quando "searchText" estiver vazio', () => {
-    render(<SearchFeedback {...{ ...defaultProps, searchText: "" }} />);
+  it('não renderiza o texto de pesquisa quando "searchText" estiver vazio', () => {
+    renderComponent({ searchText: "" });
 
-    const searchTextElement = screen.queryByText(/".*"/)
+    const searchElement = screen.queryByText(/".*"/);
 
-    expect(searchTextElement).not.toBeInTheDocument();
+    expect(searchElement).not.toBeInTheDocument();
   });
 
-  test("Deve renderizar a imagem com o alt correto e com a src definida", () => {
-    render(<SearchFeedback {...defaultProps} />);
+  it("renderiza a imagem com o alt correto", () => {
+    renderComponent();
 
-    const imageElement = screen.getByAltText(defaultProps.alt);
-
+    const imageElement = screen.queryByAltText(defaultProps.alt);
+    
     expect(imageElement).toBeInTheDocument();
+  });
+
+  it("não renderiza a imagem se a url não for fornecida", () => {
+    renderComponent({ url: undefined });
+
+    const imageElement = screen.queryByAltText(defaultProps.alt);
+
+    expect(imageElement).not.toBeInTheDocument();
   });
 });

@@ -1,86 +1,48 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { SectionButton } from "./SectionButton";
 import { HeartFilledIcon } from "@/assets/icons/HeartFilled";
 
-describe("SectionButton Component", () => {
-    const defaultButtonIcon = <HeartFilledIcon color="#fff" heigth={15}  width={15}/>
+describe("<SectionButton/>", () => {
+  const defaultButtonIcon = <HeartFilledIcon color="#fff" heigth={15} width={15} />;
 
   test("deve renderizar o botão com título e estado selecionado", () => {
-    const onClickMock = jest.fn();
-    render(
-      <SectionButton
-        icon={defaultButtonIcon}
-        title="Botão Selecionado"
-        isSelected={true}
-        onClick={onClickMock}
-      />
-    );
+    render(<SectionButton icon={defaultButtonIcon} title="Botão Selecionado" isSelected={true} href="/teste-mock" />);
 
-    const button = screen.getByRole("button");
-
-    expect(button).toHaveClass("bg-primary");
-    expect(button).toHaveClass("cursor-auto");
-    expect(button).toHaveClass("flex");
-    expect(button).toHaveClass("items-center");
-    expect(button).toHaveClass("gap-2");
-    expect(button).toHaveClass("py-3");
-    expect(button).toHaveClass("px-4");
-
+    const linkElement = screen.getByRole("link");
     const titleElement = screen.getByText("Botão Selecionado");
+
+    expect(linkElement).toHaveClass("bg-primary");
+    expect(linkElement).toHaveAttribute("href", "/teste-mock");
     expect(titleElement).toBeInTheDocument();
     expect(titleElement).toHaveClass("text-white");
     expect(titleElement).toHaveClass("text-sm");
     expect(titleElement).toHaveClass("font-medium");
 
-    fireEvent.click(button);
-    expect(onClickMock).toHaveBeenCalledTimes(1);
+
   });
 
   test("deve renderizar o botão com título e estado não selecionado", () => {
-    const onClickMock = jest.fn();
     render(
-      <SectionButton
-        icon={defaultButtonIcon}
-        title="Botão Não Selecionado"
-        isSelected={false}
-        onClick={onClickMock}
-      />
+      <SectionButton icon={defaultButtonIcon} title="Botão Não Selecionado" isSelected={false} href="/teste-mock" />
     );
 
-    const button = screen.getByRole("button");
-
-    expect(button).toHaveClass("bg-white");
-    expect(button).toHaveClass("cursor-pointer");
-
+    const linkElement = screen.getByRole("link");
     const titleElement = screen.getByText("Botão Não Selecionado");
-    expect(titleElement).toBeInTheDocument();
-    expect(titleElement).toHaveClass("text-primary");
-    expect(titleElement).toHaveClass("text-sm");
-    expect(titleElement).toHaveClass("font-medium");
 
-    fireEvent.click(button);
-    expect(onClickMock).toHaveBeenCalledTimes(1);
+    expect(linkElement).toHaveClass("bg-white");
+    expect(linkElement).toHaveClass("cursor-pointer");
+    expect(linkElement).toHaveAttribute("href", "/teste-mock");
+    expect(titleElement).toBeInTheDocument();
   });
 
   test("deve renderizar o botão apenas com o ícone quando o título não é fornecido", () => {
-    const onClickMock = jest.fn();
-    render(
-      <SectionButton
-        icon={defaultButtonIcon}
-        isSelected={false}
-        onClick={onClickMock}
-      />
-    );
-
-    const button = screen.getByRole("button");
+    render(<SectionButton icon={defaultButtonIcon} isSelected={false} href="/teste-mock" />);
 
     const titleElement = screen.queryByText((content, element) => {
       return element?.tagName.toLowerCase() === "span";
     });
-    expect(titleElement).toBeNull();
 
-    fireEvent.click(button);
-    expect(onClickMock).toHaveBeenCalledTimes(1);
+    expect(titleElement).toBeNull();
   });
 });

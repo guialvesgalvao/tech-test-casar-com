@@ -1,10 +1,17 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import { RepositoryCard } from "./RepositoryCard";
+import { useFavoritesRepos } from "@/stores/useFavoritesRepos";
+import { IconProps } from "@/assets/icons/types";
+
+jest.mock("@/stores/useFavoritesRepos", () => ({
+  __esModule: true,
+  useFavoritesRepos: jest.fn(),
+}));
 
 jest.mock("@/assets/icons/HeartFilled", () => ({
   __esModule: true,
-  HeartFilledIcon: (props: any) => (
+  HeartFilledIcon: (props: IconProps) => (
     <svg data-testid="heart-filled-icon" {...props}>
       <title>HeartFilledIcon</title>
     </svg>
@@ -13,7 +20,7 @@ jest.mock("@/assets/icons/HeartFilled", () => ({
 
 jest.mock("@/assets/icons/Heart", () => ({
   __esModule: true,
-  HeartIcon: (props: any) => (
+  HeartIcon: (props: IconProps) => (
     <svg data-testid="heart-icon" {...props}>
       <title>HeartIcon</title>
     </svg>
@@ -22,41 +29,89 @@ jest.mock("@/assets/icons/Heart", () => ({
 
 describe("<RepositoryCard/>", () => {
   const defaultProps = {
+    owner: {
+      id: 12321,
+      userName: 'guialvesgalvao',
+      avatarUrl: 'https://avatars.githubusercontent.com/u/78868778?v=4'
+    },
+    id: 1,
     title: "Test Repository",
-    language: "python",
-    description: "This is a test repository description.",
+    description: "This is a test repository.",
+    language: "JavaScript",
+    updatedAt: "2025-01-01",
+    private: false,
     isFavorite: false,
-    lastUpdate: "Updated on 2025-01-01",
+    fork: false,
+    url: "https://github.com/example/test-repository",
+    createdAt: new Date("2025-01-01"),
+    watchers: 10,
+    defaultBranch: "main",
   };
 
-  test("deve renderizar o título, a descrição, a tecnologia principal e a data da última atualização", () => {
+
+  function mockFavorites(favoritesData: { id: number }[] = []) {
+    (useFavoritesRepos as unknown as jest.Mock).mockReturnValue({
+      favorites: favoritesData,
+      addFavorite: jest.fn(),
+      removeFavorite: jest.fn(),
+    });
+  }
+
+  it("renderiza corretamente título, descrição, linguagem e data de atualização", () => {
+    mockFavorites();
+
     render(<RepositoryCard {...defaultProps} />);
 
-    const titleElement = screen.getByRole("heading", { level: 4 });    
+    const getTitleElement = screen.getByRole("heading", { level: 4 });
+    const getDescriptionElement = screen.getByText(defaultProps.description);
+    const getLanguageElement = screen.getByText(defaultProps.language);
+    const getModifiedElement = screen.getByText(defaultProps.updatedAt);
 
-    expect(titleElement).toHaveTextContent(defaultProps.title);
-    expect(screen.getByText(defaultProps.description)).toBeInTheDocument();
-    expect(screen.getByText(defaultProps.language)).toBeInTheDocument();
-    expect(screen.getByText(defaultProps.lastUpdate)).toBeInTheDocument();
+    expect(getTitleElement).toHaveTextContent(defaultProps.title);
+    expect(getDescriptionElement).toBeInTheDocument();
+    expect(getLanguageElement).toBeInTheDocument();
+    expect(getModifiedElement).toBeInTheDocument();
   });
 
-  test('deve renderizar o botão de favorito com "HeartIcon" quando "isFavorite" for false', () => {
+  it("renderiza HeartIcon quando o repositório não está nos favoritos", () => {
+    mockFavorites();
     render(<RepositoryCard {...defaultProps} />);
 
-    const favoriteButton = screen.getByRole("button");
+    const getIcon = screen.queryByTestId("heart-icon");
+    const getIconFilled = screen.queryByTestId("heart-filled-icon");
 
-    expect(favoriteButton).toBeInTheDocument();
-    expect(screen.getByTestId("heart-icon")).toBeInTheDocument();
-    expect(screen.queryByTestId("heart-filled-icon")).not.toBeInTheDocument();
+    expect(getIcon).toBeInTheDocument();
+    expect(getIconFilled).not.toBeInTheDocument();
   });
 
-  test('deve renderizar o botão de favorito com "HeartFilledIcon" quando "isFavorite" for true', () => {
-    render(<RepositoryCard {...{ ...defaultProps, isFavorite: true }} />);
+  it("renderiza HeartFilledIcon quando o repositório está nos favoritos", () => {
+    mockFavorites([{ id: 1 }]);
+    render(<RepositoryCard {...defaultProps} isFavorite={true} />);
 
-    const favoriteButton = screen.getByRole("button");
+    const getIcon = screen.queryByTestId("heart-icon");
+    const getIconFilled = screen.queryByTestId("heart-filled-icon");
 
-    expect(favoriteButton).toBeInTheDocument();
-    expect(screen.getByTestId("heart-filled-icon")).toBeInTheDocument();
-    expect(screen.queryByTestId("heart-icon")).not.toBeInTheDocument();
+    expect(getIconFilled).toBeInTheDocument();
+    expect(getIcon).not.toBeInTheDocument();
+  });
+
+  it("chama addFavorite ao clicar no botão de favorito se não estiver favoritado", () => {
+    mockFavorites();
+    render(<RepositoryCard {...defaultProps} />);
+    const { addFavorite } = useFavoritesRepos();
+
+    fireEvent.click(screen.getByRole("button"));
+
+    expect(addFavorite).toHaveBeenCalledWith(expect.objectContaining({ id: defaultProps.id }));
+  });
+
+  it("chama removeFavorite ao clicar no botão de favorito se já estiver favoritado", () => {
+    mockFavorites([{ id: 1}]);
+    render(<RepositoryCard {...defaultProps} />);
+    const { removeFavorite } = useFavoritesRepos();
+
+    fireEvent.click(screen.getByRole("button"));
+
+    expect(removeFavorite).toHaveBeenCalledWith(defaultProps.id);
   });
 });

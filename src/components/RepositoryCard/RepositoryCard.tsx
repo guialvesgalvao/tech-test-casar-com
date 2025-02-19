@@ -5,61 +5,60 @@ import { HeartIcon } from "@/assets/icons/Heart";
 import { matchMainTechnologyColor } from "@/helpers/matchMainTechnologyColor";
 import { useFavoritesRepos } from "@/stores/useFavoritesRepos";
 import { IRepository } from "@/interfaces/IRepository";
+import * as motion from "motion/react-client";
+import Link from "next/link";
 
 export function RepositoryCard(props: Readonly<IRepository>) {
-  const { id, title, description, language, updatedAt } = props;
+  const { id, title, description, language, owner, updatedAt } = props;
   const { favorites, addFavorite, removeFavorite } = useFavoritesRepos();
 
   const isFavorite = !!favorites.find((fav) => fav.id === id);
 
-  function handleFavorite() {
-    favorites.find((fav) => fav.id === id)
-      ? removeFavorite(props.id)
-      : addFavorite(props);
+  function handleFavorite(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    favorites.find((fav) => fav.id === id) ? removeFavorite(props.id) : addFavorite(props);
   }
 
   return (
-    <div className="border rounded-lg  p-4 bg-white mb-5">
-      <div className="flex justify-between items-start">
-        <div>
-          <h4 className="text-lg font-semibold text-grey-neutral">{title}</h4>
-          <p className="font-normal text-placeholder text-base md:text-sm">
-            {description}
-          </p>
+    <Link href={`/user/${owner.userName}/${title}`}>
+      <motion.div
+        whileHover={{
+          scale: 1.02,
+          transition: { duration: 0.2 },
+        }}
+        className="border rounded-lg cursor-pointer p-4 bg-white mb-5"
+      >
+        <div className="flex justify-between items-start">
+          <div>
+            <h4 className="text-lg font-semibold text-grey-neutral">{title}</h4>
+            <p className="font-normal text-placeholder text-base md:text-sm">{description}</p>
+          </div>
+
+          <FavoriteButton isFavorite={isFavorite} handleFavorite={handleFavorite} />
         </div>
 
-        <FavoriteButton
-          isFavorite={isFavorite}
-          handleFavorite={handleFavorite}
-        />
-      </div>
-
-      <div className="mt-4 flex flex-col gap-x-8 gap-y-2 text-sm text-gray-500 sm:flex-row">
-        {language && language.trim() !== "" && (
-          <MainTechnology name={language} />
-        )}
-        <span>{updatedAt}</span>
-      </div>
-    </div>
+        <div className="mt-4 flex flex-col gap-x-8 gap-y-2 text-sm text-gray-500 sm:flex-row">
+          {language && language.trim() !== "" && <MainTechnology name={language} />}
+          <span>{updatedAt}</span>
+        </div>
+      </motion.div>
+    </Link>
   );
 }
 
 interface FavoriteButtonProps {
   isFavorite: boolean;
-  handleFavorite: () => void;
+  handleFavorite: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-function FavoriteButton({
-  isFavorite,
-  handleFavorite,
-}: Readonly<FavoriteButtonProps>) {
+function FavoriteButton({ isFavorite, handleFavorite }: Readonly<FavoriteButtonProps>) {
   return (
-    <button
-      onClick={handleFavorite}
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.8 }}
+      onClick={(e) => handleFavorite(e)}
       className={`${
-        isFavorite
-          ? "border-primary-dark border rounded-full"
-          : "bg-white-bg-matte"
+        isFavorite ? "border-primary-dark border rounded-full" : "bg-white-bg-matte"
       } rounded-full p-2 cursor-pointer`}
     >
       {isFavorite ? (
@@ -67,7 +66,7 @@ function FavoriteButton({
       ) : (
         <HeartIcon color="#8C8C8C" width={18} heigth={16} />
       )}
-    </button>
+    </motion.button>
   );
 }
 

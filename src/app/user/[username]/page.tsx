@@ -9,11 +9,12 @@ import { useQuery } from "@tanstack/react-query";
 import { UserProfile } from "@/components/UserProfile/UserProfile";
 import { OrbitProgress } from "react-loading-indicators";
 import { RepoService } from "@/services/repoService";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { IRepository } from "@/interfaces/IRepository";
 import { LIMIT_REPO_PER_PAGE } from "@/consts/defaultConfigConsts";
 import SearchInput from "@/components/SearchInput/SearchInput";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import * as motion from "motion/react-client";
 
 export default function UserPage() {
   const { username } = useParams();
@@ -31,34 +32,27 @@ export default function UserPage() {
     queryKey: ["user", username],
     queryFn: () => new UserService().getUser(username as string),
   });
-
-  async function getMoreRepositories() {
+  
+  const getMoreRepositories = useCallback(async () => {
     try {
       const newRepos = await repository.getUserRepos(username as string, page);
       setRepositories((prevRepos) => {
         const existingIds = new Set(prevRepos.map((r) => r.id));
         const filtered = newRepos.filter((repo) => !existingIds.has(repo.id));
-
         return [...prevRepos, ...filtered];
       });
-
       if (newRepos.length < LIMIT_REPO_PER_PAGE) {
         setHasMore(false);
       }
     } catch (error) {
       console.error("Erro ao carregar repositórios:", error);
     }
-  }
+  }, [page, username, repository]);
 
   if (user === undefined || isLoading) {
     return (
       <div className="flex items-center justify-center w-full h-96 ">
-        <OrbitProgress
-          variant="track-disc"
-          color={"#32C0C6"}
-          speedPlus={2}
-          size="small"
-        />
+        <OrbitProgress variant="track-disc" color={"#32C0C6"} speedPlus={2} size="small" />
       </div>
     );
   }
@@ -86,16 +80,29 @@ export default function UserPage() {
         </div>
       )}
 
-      <div className="w-full md:w-1/3 mb-5 px-3">
-        <UserProfile
-          name={user.name}
-          avatarUrl={user.avatarUrl}
-          bio={user.bio ?? ""}
-          userName={user.userName}
-        />
-      </div>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{
+          duration: 0.5,
+          delay: 0.3,
+          ease: [0, 0.71, 0.2, 1.01],
+        }}
+        className="w-full md:w-1/3 mb-5 px-3"
+      >
+        <UserProfile name={user.name} avatarUrl={user.avatarUrl} bio={user.bio ?? ""} userName={user.userName} />
+      </motion.div>
 
-      <div className="w-full md:w-2/3">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{
+          duration: 0.5,
+          delay: 0.3,
+          ease: [0, 0.71, 0.2, 1.01],
+        }}
+        className="w-full md:w-2/3"
+      >
         <RepositoryList
           title="Repositórios"
           align="initial"
@@ -105,7 +112,7 @@ export default function UserPage() {
           page={page}
           setPage={setPage}
         />
-      </div>
+      </motion.div>
     </div>
   );
 }

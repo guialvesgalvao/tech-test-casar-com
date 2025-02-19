@@ -1,3 +1,5 @@
+import { IUserResponse, IUserResult } from "./IUsers";
+
 export interface IRepository {
   id: number;
   title: string;
@@ -12,6 +14,7 @@ export interface IRepository {
   watchers: number;
   defaultBranch: string;
   nextPage?: number;
+  owner: IUserResult;
 }
 
 export interface IRepositoryResponse {
@@ -26,4 +29,30 @@ export interface IRepositoryResponse {
   language: string;
   watchers: number;
   default_branch: string;
+  owner: IUserResponse
+}
+
+export interface IAttach {
+  id: string;
+  name: string;
+  path: string;
+  url: string;
+  type: IAttachType;
+  content?: string;
+  owner?: IUserResult;
+}
+
+export interface IAttachResult {
+  sha: string;
+  name: string;
+  path: string;
+  url: string;
+  type: IAttachType;
+  owner?: IUserResponse;
+  content?: string;
+}
+
+export enum IAttachType {
+  File = "file", 
+  Folder = "dir"  
 }
